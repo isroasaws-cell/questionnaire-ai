@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Questionnaire AI</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f6f9;
+margin:0;
+}
+
+.header{
+background:#111827;
+color:white;
+padding:20px;
+font-size:22px;
+text-align:center;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+margin-top:40px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:10px;
+box-shadow:0 4px 12px rgba(0,0,0,0.1);
+margin-bottom:25px;
+}
+
+button{
+background:#2563eb;
+color:white;
+border:none;
+padding:12px 20px;
+border-radius:6px;
+cursor:pointer;
+}
+
+button:hover{
+background:#1e40af;
+}
+
+.drop{
+border:2px dashed #cbd5e1;
+padding:30px;
+text-align:center;
+border-radius:8px;
+margin-bottom:15px;
+}
+
+.answer{
+background:#f1f5f9;
+padding:15px;
+margin-top:10px;
+border-radius:6px;
+}
+
+.loading{
+display:none;
+color:#2563eb;
+margin-top:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+🚀 Questionnaire AI
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<h3>Upload Questionnaire</h3>
+
+<div class="drop">
+<input type="file" id="questionnaire">
+</div>
+
+<button onclick="uploadQuestionnaire()">Upload</button>
+
+</div>
+
+<div class="card">
+
+<h3>Upload Reference Documents</h3>
+
+<div class="drop">
+<input type="file" id="reference">
+</div>
+
+<button onclick="uploadReference()">Upload</button>
+
+</div>
+
+<div class="card">
+
+<h3>Generate Answers</h3>
+
+<input type="number" id="qid" placeholder="Questionnaire ID">
+
+<br><br>
+
+<button onclick="generateAnswers()">Generate Answers</button>
+
+<div class="loading" id="loading">
+Generating answers... 🤖
+</div>
+
+<div id="answers"></div>
+
+</div>
+
+<div class="card">
+
+<h3>Download Answers</h3>
+
+<input type="number" id="downloadid" placeholder="Questionnaire ID">
+
+<br><br>
+
+<button onclick="downloadAnswers()">Download File</button>
+
+</div>
+
+</div>
+
+<script>
+
+const API=""
+
+async function uploadQuestionnaire(){
+
+let file=document.getElementById("questionnaire").files[0]
+
+let form=new FormData()
+form.append("file",file)
+
+let res=await fetch(API+"/upload-questionnaire",{
+method:"POST",
+body:form
+})
+
+let data=await res.json()
+
+alert("Uploaded! Questionnaire ID: "+data.questionnaire_id)
+
+}
+
+async function uploadReference(){
+
+let file=document.getElementById("reference").files[0]
+
+let form=new FormData()
+form.append("file",file)
+
+let res=await fetch(API+"/upload-reference",{
+method:"POST",
+body:form
+})
+
+let data=await res.json()
+
+alert(data.message)
+
+}
+
+async function generateAnswers(){
+
+let id=document.getElementById("qid").value
+
+document.getElementById("loading").style.display="block"
+
+let res=await fetch(API+"/generate-answers/"+id,{
+method:"POST"
+})
+
+let data=await res.json()
+
+document.getElementById("loading").style.display="none"
+
+let html=""
+
+data.results.forEach(r=>{
+
+html+=`
+
+<div class="answer">
+
+<b>Question:</b><br>
+${r.question}
+
+<br><br>
+
+<b>Answer:</b><br>
+${r.answer}
+
+<br><br>
+
+<b>Confidence:</b> ${r.confidence}
+
+</div>
+
+`
+
+})
+
+document.getElementById("answers").innerHTML=html
+
+}
+
+function downloadAnswers(){
+
+let id=document.getElementById("downloadid").value
+
+window.open(API+"/export/"+id)
+
+}
+
+</script>
+
+</body>
+</html>

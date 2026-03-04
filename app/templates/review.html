@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generated Answers</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Generated Answers</h1>
+
+<table>
+
+<tr>
+    <th>Question</th>
+    <th>Answer</th>
+    <th>Citations</th>
+    <th>Confidence</th>
+</tr>
+
+{% for answer in answers %}
+
+<tr>
+    <td>{{ answer.question_text }}</td>
+    <td>{{ answer.answer_text }}</td>
+    <td>{{ answer.citations }}</td>
+    <td>{{ answer.confidence_score }}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+</html>

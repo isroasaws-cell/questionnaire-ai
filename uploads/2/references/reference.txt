@@ -1,0 +1,5 @@
+Our company encrypts data at rest using AES-256.
+
+We support multi-factor authentication.
+
+Our servers are hosted on AWS in the EU region.

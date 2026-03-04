@@ -1,0 +1,4 @@
+All customer data is encrypted at rest using AES-256.
+Data in transit is protected using TLS 1.2.
+We are SOC 2 Type II certified.
+Customer data is hosted in AWS us-east-1 region.

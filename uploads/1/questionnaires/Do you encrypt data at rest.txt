@@ -1,0 +1,4 @@
+Do you encrypt data at rest?
+Do you encrypt data in transit?
+Are you SOC 2 certified?
+Where is customer data hosted?

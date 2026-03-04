@@ -32,9 +32,15 @@ templates = Jinja2Templates(directory="app/templates")
 Base.metadata.create_all(bind=engine)
 
 
-@app.get("/")
-def root():
-    return {"message": "Backend running 🚀"}
+# -------------------------
+# LANDING PAGE
+# -------------------------
+@app.get("/", response_class=HTMLResponse)
+def home(request: Request):
+    return templates.TemplateResponse(
+        "index.html",
+        {"request": request}
+    )
 
 
 # -------------------------

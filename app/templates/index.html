@@ -105,10 +105,6 @@ margin-top:10px;
 <div class="card">
 <h3>Generate Answers</h3>
 
-<input type="number" id="qid" placeholder="Questionnaire ID">
-
-<br><br>
-
 <button onclick="generateAnswers()">Generate Answers</button>
 
 <div class="loading" id="loading">
@@ -122,10 +118,6 @@ Generating answers... 🤖
 <div class="card">
 <h3>Download Answers</h3>
 
-<input type="number" id="downloadid" placeholder="Questionnaire ID">
-
-<br><br>
-
 <button onclick="downloadAnswers()">Download File</button>
 
 </div>
@@ -136,12 +128,17 @@ Generating answers... 🤖
 
 const API=""
 
-let currentQuestionnaireId=null
+let questionnaireId=null
 
 
 async function uploadQuestionnaire(){
 
 let file=document.getElementById("questionnaire").files[0]
+
+if(!file){
+alert("Please select a questionnaire file")
+return
+}
 
 let form=new FormData()
 form.append("file",file)
@@ -153,12 +150,11 @@ body:form
 
 let data=await res.json()
 
-currentQuestionnaireId=data.questionnaire_id
+console.log("Upload response:",data)
 
-document.getElementById("qid").value=currentQuestionnaireId
-document.getElementById("downloadid").value=currentQuestionnaireId
+questionnaireId=data.questionnaire_id
 
-alert("Uploaded! Questionnaire ID: "+currentQuestionnaireId)
+alert("Questionnaire uploaded successfully!")
 
 }
 
@@ -166,6 +162,11 @@ alert("Uploaded! Questionnaire ID: "+currentQuestionnaireId)
 async function uploadReference(){
 
 let file=document.getElementById("reference").files[0]
+
+if(!file){
+alert("Please select a reference document")
+return
+}
 
 let form=new FormData()
 form.append("file",file)
@@ -184,16 +185,14 @@ alert(data.message)
 
 async function generateAnswers(){
 
-let id=document.getElementById("qid").value
-
-if(!id){
+if(!questionnaireId){
 alert("Upload questionnaire first")
 return
 }
 
 document.getElementById("loading").style.display="block"
 
-let res=await fetch(API+"/generate-answers/"+id,{
+let res=await fetch(API+"/generate-answers/"+questionnaireId,{
 method:"POST"
 })
 
@@ -234,9 +233,12 @@ document.getElementById("answers").innerHTML=html
 
 function downloadAnswers(){
 
-let id=document.getElementById("downloadid").value
+if(!questionnaireId){
+alert("Generate answers first")
+return
+}
 
-window.open(API+"/export/"+id)
+window.open(API+"/export/"+questionnaireId)
 
 }
 

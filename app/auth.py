@@ -9,8 +9,6 @@ from .database import SessionLocal
 from . import models
 
 # SECRET KEY (in real app use .env)
-SECRET_KEY = "supersecretkey"
-ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-
 <html>
 <head>
+
 <title>Questionnaire AI</title>
 
 <style>
@@ -128,8 +128,11 @@ Generating answers... 🤖
 
 const API=""
 
-let questionnaireId=null
+let questionnaireId = localStorage.getItem("qid")
 
+/* -------------------- */
+/* Upload Questionnaire */
+/* -------------------- */
 
 async function uploadQuestionnaire(){
 
@@ -154,10 +157,16 @@ console.log("Upload response:",data)
 
 questionnaireId=data.questionnaire_id
 
-alert("Questionnaire uploaded successfully!")
+localStorage.setItem("qid",questionnaireId)
+
+alert("✅ Questionnaire uploaded successfully!")
 
 }
 
+
+/* -------------------- */
+/* Upload Reference */
+/* -------------------- */
 
 async function uploadReference(){
 
@@ -178,12 +187,18 @@ body:form
 
 let data=await res.json()
 
-alert(data.message)
+alert("✅ "+data.message)
 
 }
 
 
+/* -------------------- */
+/* Generate Answers */
+/* -------------------- */
+
 async function generateAnswers(){
+
+questionnaireId = localStorage.getItem("qid")
 
 if(!questionnaireId){
 alert("Upload questionnaire first")
@@ -199,6 +214,12 @@ method:"POST"
 let data=await res.json()
 
 document.getElementById("loading").style.display="none"
+
+if(!data.results){
+alert("Error generating answers")
+console.log(data)
+return
+}
 
 let html=""
 
@@ -231,7 +252,13 @@ document.getElementById("answers").innerHTML=html
 }
 
 
+/* -------------------- */
+/* Download */
+/* -------------------- */
+
 function downloadAnswers(){
+
+questionnaireId = localStorage.getItem("qid")
 
 if(!questionnaireId){
 alert("Generate answers first")

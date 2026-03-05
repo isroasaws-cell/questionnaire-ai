@@ -1,7 +1,7 @@
 <!DOCTYPE html>
+
 <html>
 <head>
-
 <title>Questionnaire AI</title>
 
 <style>
@@ -81,7 +81,6 @@ margin-top:10px;
 <div class="container">
 
 <div class="card">
-
 <h3>Upload Questionnaire</h3>
 
 <div class="drop">
@@ -93,7 +92,6 @@ margin-top:10px;
 </div>
 
 <div class="card">
-
 <h3>Upload Reference Documents</h3>
 
 <div class="drop">
@@ -105,7 +103,6 @@ margin-top:10px;
 </div>
 
 <div class="card">
-
 <h3>Generate Answers</h3>
 
 <input type="number" id="qid" placeholder="Questionnaire ID">
@@ -123,7 +120,6 @@ Generating answers... 🤖
 </div>
 
 <div class="card">
-
 <h3>Download Answers</h3>
 
 <input type="number" id="downloadid" placeholder="Questionnaire ID">
@@ -140,6 +136,9 @@ Generating answers... 🤖
 
 const API=""
 
+let currentQuestionnaireId=null
+
+
 async function uploadQuestionnaire(){
 
 let file=document.getElementById("questionnaire").files[0]
@@ -154,9 +153,15 @@ body:form
 
 let data=await res.json()
 
-alert("Uploaded! Questionnaire ID: "+data.questionnaire_id)
+currentQuestionnaireId=data.questionnaire_id
+
+document.getElementById("qid").value=currentQuestionnaireId
+document.getElementById("downloadid").value=currentQuestionnaireId
+
+alert("Uploaded! Questionnaire ID: "+currentQuestionnaireId)
 
 }
+
 
 async function uploadReference(){
 
@@ -176,9 +181,15 @@ alert(data.message)
 
 }
 
+
 async function generateAnswers(){
 
 let id=document.getElementById("qid").value
+
+if(!id){
+alert("Upload questionnaire first")
+return
+}
 
 document.getElementById("loading").style.display="block"
 
@@ -219,6 +230,7 @@ ${r.answer}
 document.getElementById("answers").innerHTML=html
 
 }
+
 
 function downloadAnswers(){
 
